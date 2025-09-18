@@ -1,0 +1,5 @@
+{
+  "name": "FarmX: AI Agricultural Advisor",
+  "description": "An AI-powered agricultural advisor for the Indian marketplace, providing crop demand forecasts, price trends, and planting recommendations to help farmers make informed decisions.",
+  "requestFramePermissions": []
+}
