@@ -1,5 +1,5 @@
 import React, { useState, TouchEvent } from 'react';
-import { MarketTrend } from '../types';
+import { MarketData, MarketTrend } from '../types';
 import { TrendingUpIcon } from './icons/TrendingUpIcon';
 import { ChevronLeftIcon } from './icons/ChevronLeftIcon';
 import { ChevronRightIcon } from './icons/ChevronRightIcon';
@@ -8,10 +8,10 @@ import { RefreshIcon } from './icons/RefreshIcon';
 // --- Sub-components for MarketTrends ---
 
 const TrendSkeleton: React.FC = () => (
-  <div className="bg-white p-4 rounded-lg shadow-sm border animate-pulse">
-    <div className="h-4 bg-stone-200 rounded w-3/4 mb-2"></div>
-    <div className="h-3 bg-stone-200 rounded w-full"></div>
-    <div className="h-3 bg-stone-200 rounded w-5/6 mt-1"></div>
+  <div className="bg-white dark:bg-slate-800 p-4 rounded-lg shadow-sm border dark:border-slate-700 animate-pulse">
+    <div className="h-4 bg-stone-200 dark:bg-slate-700 rounded w-3/4 mb-2"></div>
+    <div className="h-3 bg-stone-200 dark:bg-slate-700 rounded w-full"></div>
+    <div className="h-3 bg-stone-200 dark:bg-slate-700 rounded w-5/6 mt-1"></div>
   </div>
 );
 
@@ -19,9 +19,9 @@ const MobileTrendsView: React.FC<{ trends: MarketTrend[], t: (key: string) => st
   <div className="md:hidden">
     <div className="space-y-3 max-h-[250px] overflow-y-auto pr-2">
       {trends.map((trend, index) => (
-        <div key={index} className="bg-stone-100 p-4 rounded-lg border border-gray-200">
-          <h3 className="font-semibold text-md text-green-800">{trend.trend}</h3>
-          <p className="text-sm text-gray-600 mt-1">{trend.description}</p>
+        <div key={index} className="bg-stone-50 dark:bg-slate-700 p-4 rounded-lg border border-gray-200 dark:border-slate-600">
+          <h3 className="font-semibold text-md text-green-800 dark:text-green-400">{trend.trend}</h3>
+          <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">{trend.description}</p>
         </div>
       ))}
     </div>
@@ -52,9 +52,9 @@ const DesktopTrendsCarousel: React.FC<{
       >
         {trends.map((trend, index) => (
           <div key={index} className="min-w-full flex-shrink-0">
-            <div className="bg-stone-100 p-6 rounded-lg border border-gray-200 h-full flex flex-col justify-center items-center text-center min-h-[120px]">
-              <h3 className="font-semibold text-lg text-green-800">{trend.trend}</h3>
-              <p className="text-sm text-gray-600 mt-2 max-w-md">{trend.description}</p>
+            <div className="bg-stone-50 dark:bg-slate-700 p-6 rounded-lg border border-gray-200 dark:border-slate-600 h-full flex flex-col justify-center items-center text-center min-h-[140px]">
+              <h3 className="font-semibold text-lg text-green-800 dark:text-green-400">{trend.trend}</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-300 mt-2 max-w-md">{trend.description}</p>
             </div>
           </div>
         ))}
@@ -65,14 +65,14 @@ const DesktopTrendsCarousel: React.FC<{
       <>
         <button
           onClick={handlePrev}
-          className="absolute top-1/2 left-2 -translate-y-1/2 bg-white/70 hover:bg-white rounded-full p-1.5 text-gray-700 shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition"
+          className="absolute top-1/2 left-2 -translate-y-1/2 bg-white/70 dark:bg-slate-800/70 hover:bg-white dark:hover:bg-slate-800 rounded-full p-1.5 text-gray-700 dark:text-gray-200 shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition"
           aria-label={t('Previous trend')}
         >
           <ChevronLeftIcon />
         </button>
         <button
           onClick={handleNext}
-          className="absolute top-1/2 right-2 -translate-y-1/2 bg-white/70 hover:bg-white rounded-full p-1.5 text-gray-700 shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition"
+          className="absolute top-1/2 right-2 -translate-y-1/2 bg-white/70 dark:bg-slate-800/70 hover:bg-white dark:hover:bg-slate-800 rounded-full p-1.5 text-gray-700 dark:text-gray-200 shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition"
           aria-label={t('Next trend')}
         >
           <ChevronRightIcon />
@@ -85,7 +85,7 @@ const DesktopTrendsCarousel: React.FC<{
         <button
           key={index}
           onClick={() => setCurrentIndex(index)}
-          className={`h-2 w-2 rounded-full transition-colors duration-300 ${currentIndex === index ? 'bg-green-600' : 'bg-gray-300 hover:bg-gray-400'}`}
+          className={`h-2 w-2 rounded-full transition-colors duration-300 ${currentIndex === index ? 'bg-green-600 dark:bg-green-500' : 'bg-gray-300 dark:bg-slate-600 hover:bg-gray-400 dark:hover:bg-slate-500'}`}
           aria-label={`${t('Go to trend')} ${index + 1}`}
         />
       ))}
@@ -96,19 +96,20 @@ const DesktopTrendsCarousel: React.FC<{
 // --- Main MarketTrends Component ---
 
 interface MarketTrendsProps {
-  trends: MarketTrend[] | null;
+  marketData: MarketData | null;
   isLoading: boolean;
   error: string | null;
   onRefresh: () => void;
   t: (key: string) => string;
 }
 
-const MarketTrends: React.FC<MarketTrendsProps> = ({ trends, isLoading, error, onRefresh, t }) => {
+const MarketTrends: React.FC<MarketTrendsProps> = ({ marketData, isLoading, error, onRefresh, t }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
   const minSwipeDistance = 50;
+  const trends = marketData?.trends;
 
   const handlePrev = () => trends && setCurrentIndex((prev) => (prev === 0 ? trends.length - 1 : prev - 1));
   const handleNext = () => trends && setCurrentIndex((prev) => (prev === trends.length - 1 ? 0 : prev + 1));
@@ -131,16 +132,16 @@ const MarketTrends: React.FC<MarketTrendsProps> = ({ trends, isLoading, error, o
   const hasTrends = !isLoading && !error && trends && trends.length > 0;
 
   return (
-    <div className="bg-white rounded-xl shadow-md p-6 border border-gray-200">
+    <div className="bg-white dark:bg-slate-800 rounded-xl shadow-md p-6 border border-gray-200 dark:border-slate-700 transition-colors duration-300">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold text-gray-800 flex items-center">
+        <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 flex items-center">
           <TrendingUpIcon />
           {t('Latest Market Insights')}
         </h2>
         <button
           onClick={onRefresh}
           disabled={isLoading}
-          className="flex items-center gap-1.5 px-3 py-1.5 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="flex items-center gap-1.5 px-3 py-1.5 border border-gray-300 dark:border-slate-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           aria-label={t('Refresh market trends')}
         >
           <RefreshIcon />
@@ -150,7 +151,7 @@ const MarketTrends: React.FC<MarketTrendsProps> = ({ trends, isLoading, error, o
       
       {isLoading && <div className="space-y-4"><TrendSkeleton /><TrendSkeleton /></div>}
       
-      {error && <p className="text-red-600 text-sm">{t('Could not load market trends. Please try again later.')}</p>}
+      {error && <p className="text-red-600 dark:text-red-400 text-sm">{t('Could not load market trends. Please try again later.')}</p>}
       
       {hasTrends && (
         <>
@@ -170,7 +171,7 @@ const MarketTrends: React.FC<MarketTrendsProps> = ({ trends, isLoading, error, o
       )}
 
       {!isLoading && !error && (!trends || trends.length === 0) && (
-        <p className="text-gray-500 text-sm text-center py-4">{t('No current market trends to display.')}</p>
+        <p className="text-gray-500 dark:text-gray-400 text-sm text-center py-4">{t('No current market trends to display.')}</p>
       )}
     </div>
   );

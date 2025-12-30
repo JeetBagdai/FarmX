@@ -31,7 +31,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({ currentLanguage, on
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-center gap-2 px-3 py-2 border-2 border-green-600 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors"
+        className="flex items-center justify-center gap-2 px-3 py-2 border-2 border-green-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors"
         aria-haspopup="true"
         aria-expanded={isOpen}
       >
@@ -41,7 +41,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({ currentLanguage, on
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-20">
+        <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-20">
           <ul className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
             {languages.map((lang) => (
               <li key={lang}>
@@ -49,8 +49,8 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({ currentLanguage, on
                   onClick={() => handleSelect(lang)}
                   className={`w-full text-left block px-4 py-2 text-sm ${
                     currentLanguage === lang
-                      ? 'bg-green-100 text-green-900'
-                      : 'text-gray-700 hover:bg-gray-100'
+                      ? 'bg-green-100 dark:bg-green-900/40 text-green-900 dark:text-green-100'
+                      : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700'
                   }`}
                   role="menuitem"
                 >
