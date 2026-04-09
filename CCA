@@ -1,0 +1,33 @@
+import org.cloudbus.cloudsim.*; 
+import org.cloudbus.cloudsim.core.CloudSim; 
+import org.cloudbus.cloudsim.provisioners.*; 
+import java.util.*; 
+public class FCFS_Example { 
+  public static void main(String[] args) { 
+    try { 
+      CloudSim.init(1, Calendar.getInstance(), false); 
+      Datacenter dc = createDatacenter("DC"); 
+      DatacenterBroker broker = new DatacenterBroker("Broker"); 
+      int id = broker.getId(); 
+      Vm vm = new Vm(0, id, 1000, 1, 512, 1000, 10000, "Xen", new CloudletSchedulerSpaceShared()); 
+      broker.submitVmList(Arrays.asList(vm)); 
+      UtilizationModel m = new UtilizationModelFull(); 
+      Cloudlet c1 = new Cloudlet(0, 40000, 1, 300, 300, m, m, m); 
+      Cloudlet c2 = new Cloudlet(1, 10000, 1, 300, 300, m, m, m); 
+      c1.setUserId(id); c2.setUserId(id); 
+      broker.submitCloudletList(Arrays.asList(c1, c2)); 
+      CloudSim.startSimulation(); 
+      List<Cloudlet> res = broker.getCloudletReceivedList(); 
+      CloudSim.stopSimulation(); 
+      for (Cloudlet c : res) System.out.println(c.getCloudletId() + " | SUCCESS | " + c.getFinishTime()); 
+    } catch (Exception e) { e.printStackTrace(); } 
+  } 
+  static Datacenter createDatacenter(String name) { 
+    List<Pe> pe = Arrays.asList(new Pe(0, new PeProvisionerSimple(1000))); 
+    Host host = new Host(0, new RamProvisionerSimple(2048), new BwProvisionerSimple(10000), 1000000, pe, new VmSchedulerTimeShared(pe)); 
+    DatacenterCharacteristics ch = new DatacenterCharacteristics( "x86", "Linux", "Xen", Arrays.asList(host), 10.0, 3.0, 0.05, 0.1, 0.1); 
+    try { 
+      return new Datacenter(name, ch, new VmAllocationPolicySimple(Arrays.asList(host)), new LinkedList<>(), 0); 
+    } catch (Exception e) { return null; } 
+  } 
+}
